@@ -1,0 +1,48 @@
+#navbar {
+    -fx-padding : 5px;
+    -fx-background-color : #48009a;
+}
+
+#body {
+    -fx-padding : 10px
+}
+#studentInfoContainer {
+    -fx-padding : 15px;
+    -fx-background-color : white;
+}
+.bold-lbl-lg {
+    -fx-font-weight : bold;
+    -fx-font-size : large;
+}
+.light-lbl-md {
+    -fx-font-weight : bolder;
+    -fx-font-size : 15px;
+    -fx-text-fill : grey;
+}
+.header-lbl-md {
+    -fx-font-weight : bolder;
+    -fx-font-size : 25px;
+}
+
+.gButton {
+    -fx-background-color : #48009a;
+    -fx-text-fill : white;
+    -fx-font-weight : bolder;
+    -fx-font-size : large;
+}
+.btn-primary {
+    -fx-background-color : none;
+    -fx-text-fill : white;
+    -fx-font-weight : bolder;
+    -fx-font-size : larger;
+}
+.edit-btn {
+    -fx-background-color : orange;
+    -fx-text-fill : white;
+    -fx-font-weight : bolder;
+}
+.delete-btn {
+    -fx-background-color : red;
+    -fx-text-fill : white;
+    -fx-font-weight : bolder;
+}
