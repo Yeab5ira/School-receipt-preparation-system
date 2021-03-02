@@ -1,4 +1,4 @@
-package models;
+package receiptmanagement.models;
 
 public class Student {
     private int id, grade;

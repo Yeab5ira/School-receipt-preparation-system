@@ -5,11 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -28,7 +30,7 @@ import receiptmanagement.ReceiptManagement;
 import services.CustomMethods;
 import services.Database;
 
-public final class StudentsList {
+public final class ManagePayment {
     
     //create instance of custom methods 
     CustomMethods cmMaster = new CustomMethods();
@@ -45,19 +47,6 @@ public final class StudentsList {
     TableColumn tcSection= new TableColumn("Section");
     TableColumn tcRemaining = new TableColumn("Remaining");
     
-    //create the labels for student info card
-    Label lblStudentInfoTitle = new Label("Student Info.");
-    Label lblFullNameTitle = new Label("Full Name");
-    Label lblFullName = new Label("Full Name");
-    Label lblGradeTitle = new Label("Grade");
-    Label lblGrade = new Label("Grade");
-    
-    
-    //set the student info card with info got from click listener
-    public void setSelectedStudent(Student student){
-        lblFullName.setText(student.getFn()+" "+student.getMn()+" "+student.getLn());
-        lblGrade.setText(student.getGrade()+student.getSec());
-    }
     
     public void populateStudentsTable(int grade) {
         ObservableList<Student> studentList = FXCollections.observableArrayList();
@@ -87,12 +76,18 @@ public final class StudentsList {
         tcSection.setCellValueFactory(new PropertyValueFactory<>("sec"));
         tcRemaining.setCellValueFactory(new PropertyValueFactory<>("remaining"));
         
+        tvStudents.getItems().clear();
         tvStudents.setItems(studentList);
     }
+    
+    public void switchPaymentStat(ActionEvent event){
+        
+    }
+    
     BorderPane root = new BorderPane();
     
     
-    public StudentsList(Stage primaryStage){
+    public ManagePayment(Stage primaryStage){
         
         //create the navigation bar
         AnchorPane apNavbar = new AnchorPane();
@@ -100,32 +95,20 @@ public final class StudentsList {
         HBox hbNavbuttonContainer = new HBox(15);
         
         //create the navigation bar buttons
-        Button btnSignout = cmMaster.faButton("SIGN_OUT","1em","WHITE","Signout");
-        Button btnReport = cmMaster.faButton("FILE","1em","WHITE","Report");
-        Button btnReceipt = cmMaster.faButton("PRINT","1em","WHITE","Prepare Receipt");
-        Button btnAddStudent = cmMaster.faButton("PLUS","1em","WHITE","Add Student");
-        Button btnExport = cmMaster.faButton("SAVE","1em","WHITE","Export");
+        Button btnBack = cmMaster.faButton("CHEVRON_LEFT","1em","WHITE","Back");
         //assign class name to the buttons
-        btnSignout.getStyleClass().add("btn-primary");
-        btnExport.getStyleClass().add("btn-primary");
-        btnReceipt.getStyleClass().add("btn-primary");
-        btnAddStudent.getStyleClass().add("btn-primary");
-        btnReport.getStyleClass().add("btn-primary");
-        
+        btnBack.getStyleClass().add("btn-primary");
         
         //add the navigation buttons to their container
-        hbNavbuttonContainer.getChildren().addAll(btnSignout,btnReport,btnReceipt,btnAddStudent,btnExport);
+        hbNavbuttonContainer.getChildren().addAll(btnBack);
         
         //align the signout button and the other navigation buttons to opposite ends
         AnchorPane.setRightAnchor(hbNavbuttonContainer, 0.00);
         AnchorPane.setTopAnchor(hbNavbuttonContainer, 0.00);
         AnchorPane.setBottomAnchor(hbNavbuttonContainer, 0.00);
-        AnchorPane.setLeftAnchor(btnSignout,0.00);
-        AnchorPane.setTopAnchor(btnSignout, 0.00);
-        AnchorPane.setBottomAnchor(btnSignout, 0.00);
         
         //add the navigation bar nodes to the navbar Anchorpane we created
-        apNavbar.getChildren().addAll(btnSignout,hbNavbuttonContainer);
+        apNavbar.getChildren().addAll(btnBack,hbNavbuttonContainer);
         
         
         // *************************** Body ************************************ //
@@ -139,6 +122,7 @@ public final class StudentsList {
         AnchorPane.setLeftAnchor(tvStudents, 10.00);
         AnchorPane.setRightAnchor(tvStudents, 350.00);
         AnchorPane.setTopAnchor(tvStudents, 10.00);
+//        AnchorPane.setBottomAnchor(tvStudents, 02.00);
         
         
         //add the columns to the table view
@@ -147,83 +131,58 @@ public final class StudentsList {
         //populate the table
         populateStudentsTable(1);
         
-        //make the student info card
-        VBox vbStudentInfo = new VBox(10);
-        vbStudentInfo.setAlignment(Pos.CENTER);
-        vbStudentInfo.setPrefWidth(250.00);
-        vbStudentInfo.setPrefHeight(200.00);
-        vbStudentInfo.setId("studentInfoContainer");
-        
-        //add class name to the label for styling
-        lblStudentInfoTitle.getStyleClass().add("header-lbl-md");
-        lblFullNameTitle.getStyleClass().add("light-lbl-md");
-        lblGradeTitle.getStyleClass().add("light-lbl-md");
-        lblFullName.getStyleClass().add("bold-lbl-lg");
-        lblGrade.getStyleClass().add("bold-lbl-lg");
-        
-        //create vboxes to contain the labels
-        VBox vbFullnameContainer = new VBox(2);
-        VBox vbGradeContainer = new VBox(2);
-        
-        //add the labels to the containers
-        vbFullnameContainer.getChildren().addAll(lblFullNameTitle,new Separator(),lblFullName);
-        vbGradeContainer.getChildren().addAll(lblGradeTitle, new Separator(), lblGrade);
-        
-        //add the labels to studentinfo card
-        vbStudentInfo.getChildren().addAll(lblStudentInfoTitle, new Separator(),vbFullnameContainer,vbGradeContainer);
-        
-        //create edit and delete buttons
-        VBox vbModifyButtons = new VBox(0);
-        Button btnEdit = cmMaster.faButton("EDIT","2em","WHITE","");
-        btnEdit.setPrefHeight(60.00);
-        btnEdit.setPrefWidth(60.00);
-        btnEdit.getStyleClass().add("edit-btn");
-        Button btnDelete = cmMaster.faButton("TRASH", "2em", "WHITE","");
-        btnDelete.setPrefHeight(60.00);
-        btnDelete.setPrefWidth(60.00);
-        btnDelete.getStyleClass().add("delete-btn");
-        vbModifyButtons.getChildren().addAll(btnEdit,btnDelete);
-        
-        //anchor the studentinfo card to make it responsive on different sized screens
-        AnchorPane.setRightAnchor(vbStudentInfo, 75.00);
-        AnchorPane.setTopAnchor(vbStudentInfo, 10.00);
-        
-        AnchorPane.setTopAnchor(vbModifyButtons, 10.00);
-        AnchorPane.setRightAnchor(vbModifyButtons, 15.00);
-        
         //create previous payments table container
-        VBox vbPreviousPayments = new VBox(10);
-        vbPreviousPayments.setPrefWidth(310.00);
-        vbPreviousPayments.setPrefHeight(200.00);
-        vbPreviousPayments.setStyle("-fx-background-color: white");
-        vbPreviousPayments.setAlignment(Pos.TOP_CENTER);
+        VBox vbMonthlyStatus = new VBox(10);
+        vbMonthlyStatus.setPrefWidth(310.00);
+        vbMonthlyStatus.setStyle("-fx-background-color: white; -fx-padding:10px;");
+        vbMonthlyStatus.setAlignment(Pos.TOP_CENTER);
         
-        AnchorPane.setRightAnchor(vbPreviousPayments, 15.00);
-        AnchorPane.setTopAnchor(vbPreviousPayments, 225.00);
-        //create a new table view for previous payments
-        TableView tvPreviousPayments = new TableView();
-        TableColumn tcPrevSerial = new TableColumn("Serial");
-        TableColumn tcPrevReason = new TableColumn("Reason");
-        //add columns to the previous payments table
-        tvPreviousPayments.getColumns().addAll(tcPrevSerial,tcPrevReason);
+        AnchorPane.setRightAnchor(vbMonthlyStatus, 15.00);
+        AnchorPane.setTopAnchor(vbMonthlyStatus, 15.00);
+//        AnchorPane.setBottomAnchor(vbMonthlyStatus, 15.00);
         
-        Label lblPrevHeader = new Label("Previous Payments");
-        lblPrevHeader.getStyleClass().add("header-lbl-md");
-        vbPreviousPayments.getChildren().addAll(lblPrevHeader, new Separator(),tvPreviousPayments);
+        //create the labels for monthly payment stat
+        Label lblMonthlyStat = new Label("Monthly Payment Stat.");
+        lblMonthlyStat.getStyleClass().add("header-lbl-md");
+        
+        
+        //month buttons
+        ArrayList<Button> alMonthButtons = new ArrayList<>();
+        String[] stMonthList = {"sept","oct","nov","dece","jan","feb","mar","apr","may","jun","jul","aug"};
+        for (String month : stMonthList) {
+            Button btnMonth = new Button(month);
+            btnMonth.setOnAction((ActionEvent event) -> {
+                switchPaymentStat(event);
+            });
+            btnMonth.setPrefWidth(250.00);
+            btnMonth.getStyleClass().add("mBtn");
+            alMonthButtons.add(btnMonth);
+            
+        }
+        
+        //add nodes to the month status button container
+        vbMonthlyStatus.getChildren().addAll(lblMonthlyStat, new Separator());
+        vbMonthlyStatus.getChildren().addAll(alMonthButtons);
         
         //add nodes to the body container
-        apBody.getChildren().addAll(tvStudents,vbStudentInfo,vbModifyButtons, vbPreviousPayments);
+        apBody.getChildren().addAll(tvStudents, vbMonthlyStatus);
         
         // ****************************** footer for grade buttons *************************************** //
         
         //create an hbox for the bottom grade buttons container
         HBox hbBottom = new HBox(15);
-        hbBottom.setPadding(new Insets(10));
+        hbBottom.setPadding(new Insets(0,0,10,20));
+//        hbBottom.setAlignment(Pos.CENTER);
         
         //create an array list to store the buttons for the grade selectors and loop through them to save repetition of code
         ArrayList<Button> alGradeButtons = new ArrayList<>();
         for(int i=1; i<13; i++){
-            alGradeButtons.add(new Button("G-"+i));
+            final int grade = i;
+            Button btnGrade = new Button("G-"+i);
+            btnGrade.setOnAction((ActionEvent event)->{
+                populateStudentsTable(grade);
+            });
+            alGradeButtons.add(btnGrade);
         }
         alGradeButtons.forEach((btn)-> {
             btn.getStyleClass().add("gButton");
@@ -232,17 +191,16 @@ public final class StudentsList {
         
         // *********************************************************** //
         
-        //resize the tables according to the stage size
+//        resize the tables according to the stage size
         primaryStage.heightProperty().addListener((obs)->{
             tvStudents.setPrefHeight(primaryStage.getHeight()- 200.00);
-            vbPreviousPayments.setPrefHeight(primaryStage.getHeight()-420.00);
+            vbMonthlyStatus.setPrefHeight(primaryStage.getHeight()-420.00);
         });
         
         //listen to table row click 
         tvStudents.getSelectionModel().selectedItemProperty().addListener((ObservableValue observableValue, Object oldValue, Object newValue) -> {
             if(tvStudents.getSelectionModel().getSelectedItem() != null){
                 Student st = (Student) tvStudents.getSelectionModel().getSelectedItem();
-                setSelectedStudent(st);
             }
         });
         
@@ -254,7 +212,7 @@ public final class StudentsList {
         
     }
     
-    public BorderPane getStudentsListView(){
+    public BorderPane getManagePaymentView(){
         return this.root;
     }
 }

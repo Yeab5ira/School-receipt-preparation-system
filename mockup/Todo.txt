@@ -1,0 +1,8 @@
+* create a database with the name "receiptdb"
+* import the tables from the receiptdb.sql attached here
+* add your assigned views
+* make sure to pull before you commit
+* push to the "master" branch. I will merge it to the "main" branch later after organizing it
+
+-- Try to use a consistent variable naming scheme
+eg. add the node type at the beginning of the name, Label -> lblName, TextField tfName ...

@@ -46,3 +46,25 @@
     -fx-text-fill : white;
     -fx-font-weight : bolder;
 }
+.preview-btn {
+    -fx-background-color : #48009a;
+    -fx-text-fill : white;
+    -fx-font-weight : bolder;
+    -fx-font-size : larger;
+}
+.import-btn {
+    -fx-background-color : orange;
+    -fx-text-fill : white;
+    -fx-font-weight : bolder;
+    -fx-font-size : larger;
+}
+.mBtn {
+    -fx-background-color : #dddddd;
+    -fx-font-weight : bold;
+    -fx-font-size : 1.5em;
+}
+
+.options-container {
+    -fx-background-color : white;
+    -fx-padding : 10px;
+}
