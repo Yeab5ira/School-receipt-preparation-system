@@ -1,21 +1,26 @@
 package receiptmanagement.models;
 
-public class Payment {
-    private String Payer,date,reason,cashier,sec;
-    private int id,grade;
-    private float amount;
-    private boolean printed;
+import java.util.Date;
 
-    public Payment(String Payer, String date, String reason, String cashier, String sec, int id, int grade, float amount, boolean printed) {
+public class Payment {
+    private String Payer,reason,cashier,sec;
+    private int grade,payerId,serial;
+    private float amount;
+    private boolean printed,disabled;
+    private Date date;
+
+    public Payment(String Payer, String reason, String cashier, String sec, int grade, int payerId, int serial, float amount, boolean printed, boolean disabled, Date date) {
         this.Payer = Payer;
-        this.date = date;
         this.reason = reason;
         this.cashier = cashier;
         this.sec = sec;
-        this.id = id;
         this.grade = grade;
+        this.payerId = payerId;
+        this.serial = serial;
         this.amount = amount;
         this.printed = printed;
+        this.disabled = disabled;
+        this.date = date;
     }
 
     public String getPayer() {
@@ -24,14 +29,6 @@ public class Payment {
 
     public void setPayer(String Payer) {
         this.Payer = Payer;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getReason() {
@@ -58,20 +55,28 @@ public class Payment {
         this.sec = sec;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getGrade() {
         return grade;
     }
 
     public void setGrade(int grade) {
         this.grade = grade;
+    }
+
+    public int getPayerId() {
+        return payerId;
+    }
+
+    public void setPayerId(int payerId) {
+        this.payerId = payerId;
+    }
+
+    public int getSerial() {
+        return serial;
+    }
+
+    public void setSerial(int serial) {
+        this.serial = serial;
     }
 
     public float getAmount() {
@@ -90,7 +95,21 @@ public class Payment {
         this.printed = printed;
     }
 
-    
-    
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     
 }

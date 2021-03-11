@@ -1,15 +1,8 @@
 package receiptmanagement.views;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -17,7 +10,6 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -29,15 +21,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import receiptmanagement.ReceiptManagement;
 import receiptmanagement.models.Payment;
-import receiptmanagement.models.Student;
-import services.CustomMethods;
-import services.Database;
+import receiptmanagement.services.CustomMethods;
 
 public class ImportStatement {
     
@@ -58,11 +46,12 @@ public class ImportStatement {
     TableColumn tcAmount = new TableColumn("Amount");
     TableColumn tcReason = new TableColumn("Reason");
     
+    //populate the table with the list of payment
     public void populatePaymentsTable(File file){
-        int idIndex = 0;
         Date curDate = new Date();
         SimpleDateFormat curDateFormat = new SimpleDateFormat("mm/MM/yyyy");
         ObservableList<Payment> paymentList = FXCollections.observableArrayList();
+        
         
         try {
             Scanner sc = new Scanner(file);
@@ -74,7 +63,7 @@ public class ImportStatement {
                 String sec = paymentFields[5].trim();
                 float amount = Float.parseFloat(paymentFields[6].trim());
                 String reason = paymentFields[7].trim();
-                Payment paymentObj = new Payment(payer, curDateFormat.format(curDate), reason, "-", sec, idIndex++, grade, amount, false);
+                Payment paymentObj = new Payment(payer,reason , "cashier", sec, grade, 1, 1, amount, false, false,curDate);
                 
                 paymentList.add(paymentObj);
             }
@@ -105,6 +94,10 @@ public class ImportStatement {
         //assign class name to the buttons
         btnBack.getStyleClass().add("btn-primary");
         
+        btnBack.setOnAction(e -> {
+            cmMaster.switchView(primaryStage, "StudentsList");
+        });
+        
         //add the navigation bar nodes to the navbar Anchorpane we created
         apNavbar.getChildren().addAll(btnBack);
         
@@ -129,6 +122,7 @@ public class ImportStatement {
         Button btnFilePicker = cmMaster.faButton("UPLOAD","1em","BLACK","");
         Label lblFileName = new Label("Select a .csv File");
         hbFileChooserContainer.getChildren().addAll(btnFilePicker,lblFileName);
+        //file chooser
         FileChooser fcStatementFile = new FileChooser();
         fcStatementFile.setTitle("Choose Statement");
         fcStatementFile.getExtensionFilters().addAll(
@@ -143,22 +137,19 @@ public class ImportStatement {
         btnImport.getStyleClass().add("import-btn");
         
         //add on action event handler to the file chooser
-        btnFilePicker.setOnAction((ActionEvent event) -> {
+        btnFilePicker.setOnAction(e -> {
             fileStatement = fcStatementFile.showOpenDialog(primaryStage);
-            
+            //assign the label with the file name if a file is selected
             if(fileStatement != null){
-//                Desktop desktop = Desktop.getDesktop();
-//                try {
-//                    desktop.open(fileStatement);
-//                } catch (IOException ex) {
-//                    Logger.getLogger(ImportStatement.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//                populatePaymentsTable(fileStatement);
                 lblFileName.setText(fileStatement.getName());
             }
+            
+//            TODO: check the csv format and validate it 
+            
         });
         
-        btnPreview.setOnAction((ActionEvent event)->{
+        //call te populate method
+        btnPreview.setOnAction(e ->{
             if(fileStatement != null){
                 populatePaymentsTable(fileStatement);
             }

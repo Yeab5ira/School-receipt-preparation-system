@@ -1,4 +1,4 @@
-package services;
+package receiptmanagement.services;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
