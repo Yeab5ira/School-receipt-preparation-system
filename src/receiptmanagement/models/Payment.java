@@ -54,7 +54,7 @@ public class Payment {
     public void setSec(String sec) {
         this.sec = sec;
     }
-
+    
     public int getGrade() {
         return grade;
     }

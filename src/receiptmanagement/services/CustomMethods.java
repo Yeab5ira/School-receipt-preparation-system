@@ -1,6 +1,13 @@
 package receiptmanagement.services;
 
+import com.mysql.jdbc.Statement;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -16,6 +23,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import receiptmanagement.models.Payment;
 import receiptmanagement.models.Student;
 import receiptmanagement.views.AddEdit;
 import receiptmanagement.views.ImportStatement;
@@ -188,6 +196,60 @@ public class CustomMethods {
                 
         }
         
+    }
+    
+    //check if the student info sent is correct in the database
+    public boolean checkStudentExist(Payment payment){
+        String[] names = payment.getPayer().split(" ");
+        int grade = payment.getGrade();
+        String sec = payment.getSec();
+        
+        String sql = "SELECT * FROM students WHERE fn=? AND mn=? AND ln=? AND grade=? AND sec=?";
+        Connection con = new Database().createCon();
+        try {
+            PreparedStatement ps= con.prepareStatement(sql);
+            ps.setString(1, names[0].trim());
+            ps.setString(2, names[1].trim());
+            ps.setString(3, names[2].trim());
+            ps.setInt(4, grade);
+            ps.setString(5, sec.trim());
+            
+            ResultSet rs = ps.executeQuery();
+            //return true or false depending on the query result
+            return rs.next();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomMethods.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public int getPayerId(Payment payment) {
+        String[] names = payment.getPayer().split(" ");
+        int grade = payment.getGrade();
+        String sec = payment.getSec();
+        
+        String sql = "SELECT * FROM students WHERE fn=? AND mn=? AND ln=? AND grade=? AND sec=?";
+        Connection con = new Database().createCon();
+        try {
+            PreparedStatement ps= con.prepareStatement(sql);
+            ps.setString(1, names[0].trim());
+            ps.setString(2, names[1].trim());
+            ps.setString(3, names[2].trim());
+            ps.setInt(4, grade);
+            ps.setString(5, sec.trim());
+            
+            ResultSet rs = ps.executeQuery();
+            
+            if(rs.next()){
+                return rs.getInt("id");
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomMethods.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //return -1 if the student doesn't exist
+        return -1;
     }
     
 }
